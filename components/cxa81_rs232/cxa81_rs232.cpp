@@ -36,6 +36,7 @@ void CXA81RS232::setup() {
 void CXA81RS232::loop() {
   while (available()) {
     char c = (char) read();
+    ESP_LOGI("cxa81_rs232", "RX byte: 0x%02X", c); // Debug: log all received bytes
 
     if (c == '\r') {
       if (!rx_.empty()) {
