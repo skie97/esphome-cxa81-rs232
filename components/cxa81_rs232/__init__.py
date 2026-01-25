@@ -19,5 +19,7 @@ CONFIG_SCHEMA = cv.Schema(
 ).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
-    var = cg.new_Pvariable(config[CONF_ID], config[CONF_UART_ID])
+    uart_comp = await cg.get_variable(config[CONF_UART_ID])   # ✅ resolve ID -> variable
+    var = cg.new_Pvariable(config[CONF_ID], uart_comp)        # ✅ pass actual UART component
     await cg.register_component(var, config)
+    await uart.register_uart_device(var, config)              # ✅ important for UARTDevice
