@@ -39,7 +39,7 @@ class CXA81MuteSwitch : public switch_::Switch {
 class CXA81SourceSelect : public select::Select {
  public:
   void set_parent(CXA81RS232 *p) { parent_ = p; }
-  void setup() override;
+//   void setup() override;
 
  protected:
   void control(const std::string &value) override;

@@ -16,15 +16,15 @@ void CXA81MuteSwitch::write_state(bool state) {
 }
 
 // Source select options
-void CXA81SourceSelect::setup() {
-  this->traits.set_options({
-    "A1", "A2", "A3", "A4",
-    "D1", "D2", "D3",
-    "Bluetooth",
-    "USB Audio",
-    "A1 Balanced",
-  });
-}
+// void CXA81SourceSelect::setup() {
+//   this->traits.set_options({
+//     "A1", "A2", "A3", "A4",
+//     "D1", "D2", "D3",
+//     "Bluetooth",
+//     "USB Audio",
+//     "A1 Balanced",
+//   });
+// }
 
 // When HA selects an option, translate to CXA81 code and send command
 void CXA81SourceSelect::control(const std::string &value) {
