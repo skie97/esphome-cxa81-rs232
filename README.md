@@ -116,3 +116,39 @@ For the module used in v0.1 testing, the correct wiring to the ESP32 is:
 
 This may appear counterintuitive (i.e., no TTL crossover), but was verified in practice. If communication works in only one direction, double-check your module’s labeling and test both orientations.
 
+## Lovelace Card
+
+A custom Lovelace card (`cxa81-card.js`) is included for a remote-style UI on top of the firmware's switches/select/sensors — power LED, source name as the visual hero, source pill grid, and power/mute toggles.
+
+### Install
+
+1. Copy `cxa81-card.js` from this repo into your Home Assistant config directory at `<config>/www/cxa81-card.js`.
+2. In HA, go to **Settings → Dashboards → ⋮ (top right) → Resources → Add resource** and add:
+   - **URL:** `/local/cxa81-card.js?v=0.1.0` (bump the `?v=` query string whenever you update the file — HA caches custom cards aggressively).
+   - **Resource type:** `JavaScript Module`.
+3. Find your actual entity IDs in **Developer Tools → States** (search `cxa81`). They are usually prefixed with the ESPHome device name — see the gotcha below.
+4. Add the card to a dashboard. In the raw YAML editor:
+
+```yaml
+type: custom:cxa81-card
+name: "Living Room CXA81"
+power_entity:    switch.cxa81_rs232_cxa81_power
+mute_entity:     switch.cxa81_rs232_cxa81_mute
+source_entity:   select.cxa81_rs232_cxa81_source
+refresh_entity:  button.cxa81_rs232_cxa81_refresh        # optional
+firmware_entity: sensor.cxa81_rs232_cxa81_firmware_version  # optional
+protocol_entity: sensor.cxa81_rs232_cxa81_protocol_version  # optional
+error_entity:    sensor.cxa81_rs232_cxa81_last_error        # optional
+show_info_footer: true                                  # optional
+theme:                                                  # optional accent overrides
+  accent: "#d4a657"
+  background: "#0e0f11"
+```
+
+`power_entity`, `mute_entity`, and `source_entity` are required; the rest are optional.
+
+### ⚠️ Entity-ID gotcha
+
+The example YAML in `cxa81-card.js`'s install comment shows bare IDs like `switch.cxa81_power`. On a real install they are almost always prefixed with the ESPHome device's `name:` — with the example firmware config above (`name: cxa81-rs232`), the actual IDs come out as `switch.cxa81_rs232_cxa81_power`, `select.cxa81_rs232_cxa81_source`, etc.
+
+If the card renders but taps don't do anything and the source / power state stays blank, that's the cause. Open **Developer Tools → States**, search `cxa81`, and copy the IDs from there into your card YAML.
